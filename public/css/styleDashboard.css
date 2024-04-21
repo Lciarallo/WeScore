@@ -1,9 +1,6 @@
 .container__::-webkit-scrollbar {
 	width: 04px;
 }
-.timeselector_container::-webkit-scrollbar {
-	height: 04px;
-}
 .nav-bar ul li a {
 	padding: 10px 8px;
 	margin: 0 5px;
@@ -25,6 +22,7 @@
 	display: flex;
     position: relative;
 	align-items: flex-end;
+	/* align-items: center; */
 	justify-content: center;
 }
 .user_image img {
@@ -142,9 +140,65 @@
 	width: clamp(350px, 100% / 3.1, 100% / 3.1);
 	height: 92vh;
 }
+.background{
+	padding: 10px;
+}
+
+.settingsCard {
+	padding-top: 5px;
+	align-self: center;
+	width: calc(70%);
+	background: #e8eaea;
+	border-radius: 15px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	margin: auto;
+	background-color: white;
+	margin-bottom: 92hv;
+}
+#imageSettings {
+	border-radius: 50%;
+	margin: 0 auto;
+	width: 250px;
+	height: 250px;
+	border: 1px solid #ccc;
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+
+	/* Efeito de hover */
+	&:hover {
+		border-color: #000; /* Muda a cor da borda ao passar o mouse */
+	}
+}
+
+.settingsCard h1, .settingsCard h3{
+	text-align: center;
+}
+.settingsCard form{
+	padding-left: 10%;
+	padding-right: 10%;
+}
+.settingsRight img{
+	display: flex;
+	justify-content: center;
+}
+
+
+.settingsCard form input{
+	padding: 10px;
+	border-radius: 5px;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	margin-bottom: 20px;
+	outline: 0;
+	width: 100%;
+	background-color: transparent;
+	box-shadow: 0px 10px 20px -10px #9e9e9e
+}
+
 .cardDashboard {
 	width: calc(100%);
-	height: 44vh;
+	height: auto;
 	background: #e8eaea;
 	border-radius: 15px;
 	display: flex;
@@ -470,13 +524,13 @@
 	top: 30px;
 }
 /* inversão do dropdown-content */
-.cardDashboard_division:last-child:not(.cardDashboard_division:first-child):not(.cardDashboard_division:nth-child(2)) .cardDashboard_division_content .paste-button:hover .dropdown-content {
+.cardDashboard_division:last-child.cardCampeonato:not(.cardDashboard_division:first-child.cardCampeonato):not(.cardDashboard_division:nth-child(2).cardCampeonato) .cardDashboard_division_content .paste-button:hover .dropdown-content {
 	border-radius: 15px 15px 0px 15px;
 }
-.cardDashboard_division:last-child:not(.cardDashboard_division:first-child):not(.cardDashboard_division:nth-child(2)) .cardDashboard_division_content .paste-button:hover button {
+.cardDashboard_division:last-child.cardCampeonato:not(.cardDashboard_division:first-child.cardCampeonato):not(.cardDashboard_division:nth-child(2).cardCampeonato) .cardDashboard_division_content .paste-button:hover button {
 	border-radius: 0px 0px 13px 13px ;
 }
-.cardDashboard_division:last-child:not(.cardDashboard_division:first-child):not(.cardDashboard_division:nth-child(2)) .cardDashboard_division_content .paste-button:hover .dropdown-content {
+.cardDashboard_division:last-child.cardCampeonato:not(.cardDashboard_division:first-child.cardCampeonato):not(.cardDashboard_division:nth-child(2).cardCampeonato) .cardDashboard_division_content .paste-button:hover .dropdown-content {
 	top: 0;
 	transform: translateY(-100%);
 }
@@ -491,4 +545,8 @@
 }
 .swal2-popup .swal2-styled.swal2-cancel:hover{
 	background-color: var(--input-cancel-color-transparency) !important;
+}
+
+.tabcontent {
+	display: none;
 }

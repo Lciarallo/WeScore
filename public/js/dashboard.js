@@ -1,6 +1,13 @@
+const url = "http://localhost:3001/";
 // Exemplo de JavaScript para adicionar/remover a classe
 var userImage = document.getElementById("user_img");
 var userInput = document.getElementById("user_input");
+var settingsButton = document.getElementById("settingsButton")
+
+settingsButton.addEventListener("click", function (){
+
+})
+
 // Adiciona um ouvinte de evento de clique à imagem do usuário
 userImage.addEventListener("click", function () {
 	// Verifica se o menu de opções está visível
@@ -17,6 +24,8 @@ userImage.addEventListener("click", function () {
 		userInput.style.top = "30px";
 	}
 });
+
+
 
 var logoutButton = document.getElementById("logoutButton");
 logoutButton.addEventListener("click", function () {
@@ -46,6 +55,13 @@ document.getElementById("buttonTimeAdd").addEventListener("click", async functio
 		window.location.href = this.href
 	}}
 );
+
+
+document.getElementById('settingsButton').addEventListener("click"),async function(event){
+	event.preventDefault();
+	window.location.href = "/settings";
+}
+
 
 // Adicione um ouvinte de evento para os itens de campeonato, renderizado pelo handlebars
 document.getElementById("campeonatosContainer").addEventListener("click", async function (event) {
@@ -132,7 +148,7 @@ document.getElementById("campeonatosContainer").addEventListener("click", async 
 				text: "Você não poderá reverter essa ação!",
 				icon: "warning",
 				showCancelButton: true,
-				confirmButtonText: "Sim, remova!"
+				confirmButtonText: "Sim, remova-o!"
 			  }).then((result) => {
 				if (result.isConfirmed) {
 					delCampeonato(campeonatoElement, campeonatoId).then((response) => {
@@ -168,9 +184,7 @@ document.getElementById("campeonatosContainer").addEventListener("click", async 
 
 			// Modifica o atributo href
 			timeLinkElement.href = `/painelws/campeonato/${campeonatoId}/time/add`;
-			timeLinkElement.dataset.campeonatoId = campeonatoId;
-			partidaLinkElement.href = `/painelws/campeonato/${campeonatoId}/partida/add`;
-			partidaLinkElement.dataset.campeonatoId = campeonatoId;
+			partidaLinkElement.href = `/painelws/campeonato/${campeonatoId}/time/add`;
 
 			//busca o token armazenado no login
 			var token = localStorage.getItem("token");
@@ -182,7 +196,7 @@ document.getElementById("campeonatosContainer").addEventListener("click", async 
 				},
 			};
 			// Fazer uma solicitação GET para buscar as partidas do campeonato clicado
-			axios.get(`${url}partida/get/${campeonatoId}`, config)
+			axios.get(`${url}partida/${campeonatoId}`, config)
 				.then((response) => {
 					// Renderiza as partidas no contêiner de partidas
 					const partidasContainer = document.getElementById("partidasContainer");
@@ -214,7 +228,7 @@ document.getElementById("campeonatosContainer").addEventListener("click", async 
 											<div class="painelws_Btn_text">Opções</div>
 										</button>
 										<div class="dropdown-content">
-											<a id="editPartida${partida.idPartida}" href="/painelws/campeonato/${campeonatoId}/partida/${partida.idPartida}/edit"><i class="ri-pencil-line"></i>Editar</a>
+											<a id="editPartida${partida.idPartida}" href="/painelws/campeonato/${partida.idPartida}"><i class="ri-pencil-line"></i>Editar</a>
 											
 											${anchorsHTML}
 											
@@ -225,9 +239,47 @@ document.getElementById("campeonatosContainer").addEventListener("click", async 
 							  </div>
 							`;
 							partidasContainer.appendChild(partidaElement);
+
+							// Adiciona o ouvinte de evento para o botão de "Iniciar"
+							const startButton = partidaElement.querySelector(`#startPartida${partida.idPartida}`);
+							if (startButton) {
+								startButton.addEventListener("click", async () => {
+									try {
+										
+										// Faça a requisição para alterar o status da partida para "Em Andamento"
+										const idPartida = partida.idPartida
+										axios.get(`${url}partida/status/${idPartida}`, config)
+										.then((response) => {
+											// Remova o botão de Iniciar da partida
+											const startButtonPartida = document.getElementById(`startPartida${idPartida}`);
+											if (startButtonPartida) {
+												// Obtenha o pai do botão de Iniciar
+												const parentElement = startButtonPartida.parentNode;
+												// Remova o botão de Iniciar
+												startButtonPartida.parentNode.removeChild(startButtonPartida);
+
+												// Crie e adicione o botão de Finalizar
+												const turnBackPartida = document.createElement("a");
+												turnBackPartida.id = `turnBackPartida${idPartida}`;
+												turnBackPartida.href = `/painelws/partida/${idPartida}`;
+												turnBackPartida.innerHTML = '<i class="ri-arrow-turn-back-line"></i></i>Retomar</a>';
+												turnBackPartida.addEventListener("click", function () {
+													console.log("Botão de turnBack clicado");
+												});
+												// Adicione o botão de Finalizar antes do botão de Remover
+												parentElement.insertBefore(
+													turnBackPartida,
+													parentElement.querySelector(`#delPartida${idPartida}`)
+												);
+											}
+											window.location.href = `/painelws/partida/${idPartida}`;
+										})
+									} catch (error) {
+										console.error(error);
+									}
+								});
+							}
 						});
-						// Adicione ouvintes de eventos após renderizar os elementos
-						addEventListenersToPartidasContainer();
 					}
 				})
 				.catch((error) => {
@@ -235,7 +287,7 @@ document.getElementById("campeonatosContainer").addEventListener("click", async 
 				});
 
 				// Faça a requisição para pegar os ids dos times do campeonato clicado
-				axios.get(`${url}time_campeonato/${campeonatoId}`, config)
+				axios.get(`${url}partida/IDs/${campeonatoId}`, config)
 				.then((response) => {
 					const idtimes = response.data.idtime;
 					// Se não houverem times, mostre mensagem informativa
@@ -289,8 +341,8 @@ document.getElementById("campeonatosContainer").addEventListener("click", async 
 									</div>
 									<div class="cardDashboard_division_content">
 										<div class="cardDashboard_division_text">
-											<span class="cardDashboard_division_name">${time.nomeTime}</span>
-											<p class="cardDashboard_division_username">ID time: ${time.idTime}</p>
+											<span class="cardDashboard_division_name">time: ${time.nomeTime}</span>
+											<p class="cardDashboard_division_username">ID time:${time.idTime}</p>
 										</div>
 		
 										<div class="paste-button">
@@ -299,7 +351,7 @@ document.getElementById("campeonatosContainer").addEventListener("click", async 
 													<div class="painelws_Btn_text">Opções</div>
 												</button>
 												<div class="dropdown-content">
-													<a id="editTime${time.idTime}" href="/painelws/time/${time.idTime}/edit"><i class="ri-pencil-line"></i>Editar</a>
+													<a id="editTime${time.idTime}" href="/painelws/times/${time.idTime}"><i class="ri-pencil-line"></i>Editar</a>
 													<a id="delTime${time.idTime}" ><i class="ri-delete-bin-line"></i>Remover</a>
 												</div>
 										</div>
@@ -310,45 +362,36 @@ document.getElementById("campeonatosContainer").addEventListener("click", async 
 							// Adiciona ouvintes de eventos após renderizar os elementos
 							addEventListenersToTimesContainer();
 							renderJogadores(response.data[0].idTime);
-						}).catch((error) => {
+						})
+						.catch((error) => {
 							console.error(error);
-							if (error.response) {
-								const { data, status } = error.response;
-								Swal.fire({
-									icon: "error",
-									title: `${data.error}`,
-									text: `Erro ${status} ` || "Erro desconhecido",
-								});
-							} else if (error.request) {
-								// A solicitação foi feita, mas não houve resposta do servidor
-								console.error("Sem resposta do servidor");
-							} else {
-								// Algo aconteceu durante a configuração da solicitação que acionou um erro
-								console.error("Erro na configuração da solicitação", error.message);
-							}
 						});
 					}
-				}).catch((error) => {
-					console.error(error);
-					if (error.response) {
-						const { data, status } = error.response;
-						Swal.fire({
-							icon: "error",
-							title: `${data.error}`,
-							text: `Erro ${status} ` || "Erro desconhecido",
-						});
-					} else if (error.request) {
-						// A solicitação foi feita, mas não houve resposta do servidor
-						console.error("Sem resposta do servidor");
-					} else {
-						// Algo aconteceu durante a configuração da solicitação que acionou um erro
-						console.error("Erro na configuração da solicitação", error.message);
-					}
-				});
+				})
 		}
 });
-// ouvinte para elementos com ID partidasContainer, renderizado pelo handlebars
-addEventListenersToPartidasContainer();
+// ouvinte para elemesntos com ID partidasContainer, renderizado pelo handlebars
+document.getElementById("partidasContainer").addEventListener("click", async function (event) {
+	const parentElement = event.target.parentNode;
+	// Verifique se o clique foi em um botão dentro do contêiner de partidas
+	if (parentElement.classList.contains("dropdown-content")) {
+        // Obtenha a referência ao botão clicado
+        const button = event.target;
+		
+        // Obtenha o ID da partida associado a este botão
+        const partidaId = button.closest(".cardDashboard_division").id.replace("partida_", "");
+        // Realize a lógica relacionada ao botão aqui
+        if (button.id.startsWith("startPartida")) {
+            // Lógica para o botão Iniciar
+            console.log(`Botão Iniciar clicado para a partida ${partidaId}`);
+            // Faça sua requisição axios para iniciar a partida
+        } else if (button.id.startsWith("turnBackPartida")) {
+            // Lógica para o botão Retomar
+            console.log(`Botão Retomar clicado para a partida ${partidaId}`);
+            // Faça sua requisição axios para retomar a partida
+        }
+	}
+})
 // Adicione um ouvinte de evento para os itens de times, renderizado pelo handlebars
 document.getElementById("timesContainer").addEventListener("click", async function (event) {
 	// Obtenha o ID do campeonato clicado
@@ -363,29 +406,21 @@ document.getElementById("timesContainer").addEventListener("click", async functi
 			text: "Você não poderá reverter essa ação!",
 			icon: "warning",
 			showCancelButton: true,
-			confirmButtonText: "Sim, remova!"
+			confirmButtonText: "Sim, remova-o!"
 		  }).then((result) => {
 			if (result.isConfirmed) {
 				delTime(timeElement, timeId).then((response) => {
+					Swal.fire({
+						icon: 'success',
+						title: 'Time removido com sucesso',
+						showConfirmButton: false,
+						showConfirmButton: false,
+						timer: 1500,
+					});
+					return false;
 				})
 			}
-		  }).catch((error) => {
-			console.error(error);
-			if (error.response) {
-				const { data, status } = error.response;
-				Swal.fire({
-					icon: "error",
-					title: `${data.error}`,
-					text: `Erro ${status} ` || "Erro desconhecido",
-				});
-			} else if (error.request) {
-				// A solicitação foi feita, mas não houve resposta do servidor
-				console.error("Sem resposta do servidor");
-			} else {
-				// Algo aconteceu durante a configuração da solicitação que acionou um erro
-				console.error("Erro na configuração da solicitação", error.message);
-			}
-		});
+		  });
 	}
 
 	// Verifica se o clique foi em um item de campeonato (excluindo botões de opções),
@@ -421,7 +456,7 @@ document.getElementById("jogadoresContainer").addEventListener("click", async fu
 			text: "Você não poderá reverter essa ação!",
 			icon: "warning",
 			showCancelButton: true,
-			confirmButtonText: "Sim, remova!"
+			confirmButtonText: "Sim, remova-o!"
 		  }).then((result) => {
 			if (result.isConfirmed) {
 				deljogador(jogadorElement, jogadorId).then((response) => {
@@ -435,171 +470,14 @@ document.getElementById("jogadoresContainer").addEventListener("click", async fu
 					return false;
 				})
 			}
-		  }).catch((error) => {
-			console.error(error);
-			if (error.response) {
-				const { data, status } = error.response;
-				Swal.fire({
-					icon: "error",
-					title: `${data.error}`,
-					text: `Erro ${status} ` || "Erro desconhecido",
-				});
-			} else if (error.request) {
-				// A solicitação foi feita, mas não houve resposta do servidor
-				console.error("Sem resposta do servidor");
-			} else {
-				// Algo aconteceu durante a configuração da solicitação que acionou um erro
-				console.error("Erro na configuração da solicitação", error.message);
-			}
-		});
+		  });
 	}
 });
-// Função para adicionar ouvintes de eventos ao partidasContainer, renderizado pelo JS - Front
-function addEventListenersToPartidasContainer(){
-	document.getElementById("partidasContainer").addEventListener("click", async function (event) {
-		const parentElement = event.target.parentNode;
-		// Verifique se o clique foi em um botão dentro do contêiner de partidas
-		if (parentElement.classList.contains("dropdown-content")) {
-			// Obtenha a referência ao botão clicado
-			const button = event.target;
-			
-			// Obtenha o ID da partida associado a este botão
-			const partidaId = button.closest(".cardDashboard_division").id.replace("partida_", "");
-			if (button.id === `startPartida${partidaId}`) {
-				// Busca o token armazenado no login
-				var token = localStorage.getItem("token");
-	
-				// Configurar o cabeçalho com a autorizção do token
-				var config = {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				};
-				try {
-					// Faça a requisição para alterar o status da partida para "Em Andamento"
-					axios.get(`${url}partida/status/${partidaId}`, config)
-					.then((response) => {
-						// Remova o botão de Iniciar da partida
-						const startButtonPartida = document.getElementById(`startPartida${partidaId}`);
-						if (startButtonPartida) {
-							// Obtenha o pai do botão de Iniciar
-							const parentElement = startButtonPartida.parentNode;
-							// Remova o botão de Iniciar
-							startButtonPartida.parentNode.removeChild(startButtonPartida);
-	
-							// Crie e adicione o botão de Finalizar
-							const turnBackPartida = document.createElement("a");
-							turnBackPartida.id = `turnBackPartida${partidaId}`;
-							turnBackPartida.href = `/painelws/partida/${partidaId}`;
-							turnBackPartida.innerHTML = '<i class="ri-arrow-turn-back-line"></i></i>Retomar</a>';
-							// Adicione o botão de Finalizar antes do botão de Remover
-							parentElement.insertBefore(
-								turnBackPartida,
-								parentElement.querySelector(`#delPartida${partidaId}`)
-							);
-						}
-						window.location.href = `/painelws/partida/${partidaId}`;
-					})
-				} catch (error) {
-					console.error(error);
-				}
-			} else if (button.id === `turnBackPartida${partidaId}`) {
-				console.log(`Botão Retomar clicado para a partida ${partidaId}`);
-			} else if (button.id === `delPartida${partidaId}`) {
-				console.log(`Botão Remover clicado para a partida ${partidaId}`);
-				// Busca o token armazenado no login
-				var token = localStorage.getItem("token");
-	
-				// Configurar o cabeçalho com a autorizção do token
-				var config = {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				};
-				try {
-					Swal.fire({
-						title: "Tem certeza?",
-						text: "Você não poderá reverter essa ação!",
-						icon: "warning",
-						showCancelButton: true,
-						confirmButtonText: "Sim, remova!"
-					  }).then((result) => {
-						if (result.isConfirmed) {
-							// Faça a requisição para deletar  a partida
-							axios.delete(`${url}partida/${partidaId}`, config)
-							.then((response) => {
-								Swal.fire({
-									icon: 'success',
-									title: 'Partida removida com sucesso.',
-									showConfirmButton: false,
-									showConfirmButton: false,
-									timer: 1500,
-								}).then(() => {
-									// Redireciona para a página inicial do cms após o tempo definido
-									window.location.href = `/painelws`;
-								}).catch((error) => {
-									console.error(error);
-									if (error.response) {
-										const { data, status } = error.response;
-										Swal.fire({
-											icon: "error",
-											title: `${data.error}`,
-											text: `Erro ${status} ` || "Erro desconhecido",
-										});
-									} else if (error.request) {
-										// A solicitação foi feita, mas não houve resposta do servidor
-										console.error("Sem resposta do servidor");
-									} else {
-										// Algo aconteceu durante a configuração da solicitação que acionou um erro
-										console.error("Erro na configuração da solicitação", error.message);
-									}
-								});;
-							}).catch((error) => {
-								console.error(error);
-								if (error.response) {
-									const { data, status } = error.response;
-									Swal.fire({
-										icon: "error",
-										title: `${data.error}`,
-										text: `Erro ${status} ` || "Erro desconhecido",
-									});
-								} else if (error.request) {
-									// A solicitação foi feita, mas não houve resposta do servidor
-									console.error("Sem resposta do servidor");
-								} else {
-									// Algo aconteceu durante a configuração da solicitação que acionou um erro
-									console.error("Erro na configuração da solicitação", error.message);
-								}
-							});
-						}
-					  }).catch((error) => {
-						console.error(error);
-						if (error.response) {
-							const { data, status } = error.response;
-							Swal.fire({
-								icon: "error",
-								title: `${data.error}`,
-								text: `Erro ${status} ` || "Erro desconhecido",
-							});
-						} else if (error.request) {
-							// A solicitação foi feita, mas não houve resposta do servidor
-							console.error("Sem resposta do servidor");
-						} else {
-							// Algo aconteceu durante a configuração da solicitação que acionou um erro
-							console.error("Erro na configuração da solicitação", error.message);
-						}
-					});
-				} catch (error) {
-					console.error(error);
-				}
-				
-			}
-		}
-	})
-}
+
 // Função para adicionar ouvintes de eventos ao timesContainer, renderizado pelo JS - Front
 function addEventListenersToTimesContainer() {
 	document.getElementById("timesContainer").addEventListener("click", async function (event) {
+		// Obtenha o ID do campeonato clicado
 		const timeId = event.target.closest(".cardDashboard_division").dataset.timeId;
 		const timeElement = event.target.closest(".cardDashboard_division");
 		
@@ -611,29 +489,21 @@ function addEventListenersToTimesContainer() {
 				text: "Você não poderá reverter essa ação!",
 				icon: "warning",
 				showCancelButton: true,
-				confirmButtonText: "Sim, remova!"
+				confirmButtonText: "Sim, remova-o!"
 			  }).then((result) => {
 				if (result.isConfirmed) {
 					delTime(timeElement, timeId).then((response) => {
+						Swal.fire({
+							icon: 'success',
+							title: 'Time removido com sucesso',
+							showConfirmButton: false,
+							showConfirmButton: false,
+							timer: 1500,
+						});
+						return false;
 					})
 				}
-			  }).catch((error) => {
-				console.error(error);
-				if (error.response) {
-					const { data, status } = error.response;
-					Swal.fire({
-						icon: "error",
-						title: `${data.error}`,
-						text: `Erro ${status} ` || "Erro desconhecido",
-					});
-				} else if (error.request) {
-					// A solicitação foi feita, mas não houve resposta do servidor
-					console.error("Sem resposta do servidor");
-				} else {
-					// Algo aconteceu durante a configuração da solicitação que acionou um erro
-					console.error("Erro na configuração da solicitação", error.message);
-				}
-			});
+			  });
 		}
 	
 		// Verifica se o clique foi em um item de campeonato (excluindo botões de opções),
@@ -672,7 +542,7 @@ function addEventListenersTojogadoresContainer() {
 				text: "Você não poderá reverter essa ação!",
 				icon: "warning",
 				showCancelButton: true,
-				confirmButtonText: "Sim, remova!"
+				confirmButtonText: "Sim, remova-o!"
 			  }).then((result) => {
 				if (result.isConfirmed) {
 					deljogador(jogadorElement, jogadorId).then((response) => {
@@ -686,23 +556,7 @@ function addEventListenersTojogadoresContainer() {
 						return false;
 					})
 				}
-			  }).catch((error) => {
-				console.error(error);
-				if (error.response) {
-					const { data, status } = error.response;
-					Swal.fire({
-						icon: "error",
-						title: `${data.error}`,
-						text: `Erro ${status} ` || "Erro desconhecido",
-					});
-				} else if (error.request) {
-					// A solicitação foi feita, mas não houve resposta do servidor
-					console.error("Sem resposta do servidor");
-				} else {
-					// Algo aconteceu durante a configuração da solicitação que acionou um erro
-					console.error("Erro na configuração da solicitação", error.message);
-				}
-			});
+			  });
 		}
 	});
 }
@@ -801,47 +655,24 @@ async function delCampeonato(campeonatoElement,campeonatoId) {
 };
 // Função para requisição para remover o campeonato
 async function delTime(timeElement,timeId) {
-	// Obtenha o ID do campeonato clicado
-	const campeonatoId = document.getElementById("buttonTimeAdd").dataset.campeonatoId;
-	console.log( timeId, campeonatoId);
 	var token = localStorage.getItem("token");
 				var config = {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
 				};
-	await axios.delete(`${url}time_campeonato/${campeonatoId}/time/${timeId}`, config)
+	await axios.delete(`${url}time/${timeId}`, config)
 	.then((response) => {
-		Swal.fire({
-			icon: 'success',
-			title: 'Time removido com sucesso',
-			showConfirmButton: false,
-			showConfirmButton: false,
-			timer: 1500,
-		});
 		// Remover o time
 		timeElement.parentNode.removeChild(timeElement);
 	})
 	.catch((error) => {
 		console.error(error);
-		if (error.response) {
-            const { data, status } = error.response;
-            Swal.fire({
-                icon: 'error',
-                title: `${data.message}`,
-                text: `Erro ${status} ` || 'Erro desconhecido',
-            });
-        } else if (error.request) {
-            // A solicitação foi feita, mas não houve resposta do servidor
-            console.error('Sem resposta do servidor');
-        } else {
-            // Algo aconteceu durante a configuração da solicitação que acionou um erro
-            console.error('Erro na configuração da solicitação', error.message);
-        }
 	});
 };
 // Função para requisição para remover o jogador
 async function deljogador(jogadorElement,jogadorId) {
+console.log("entrou no deljogador");
 	var token = localStorage.getItem("token");
 				var config = {
 					headers: {

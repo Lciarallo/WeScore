@@ -13,8 +13,6 @@ const routesLogin = require("./src/routes/loginRoutes")
 const routesHome = require("./src/routes/homeRoutes")
 const routesPainelws = require("./src/routes/painelwsRoutes")
 const routesCampeonato = require('./src/routes/campeonatoRoutes')
-const routesTime = require('./src/routes/timeRoutes')
-const routesJogador = require('./src/routes/jogadorRoutes')
 const routesPartida = require("./src/routes/partidaRoutes")
 // Lê as configurações do .env 
 // todos os helpers fornecidos por handlebars-helpers:
@@ -103,8 +101,6 @@ app.use('/',routesHome)
 app.use('/',routesLogin)
 app.use('/painelws', routesPainelws)
 app.use('/painelws/campeonato', routesCampeonato)
-app.use('/painelws/time', routesTime)
-app.use('/painelws/jogador', routesJogador)
 app.use('/painelws/partida', routesPartida)
 
 //GET route for notes page

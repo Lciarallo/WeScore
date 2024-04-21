@@ -1,3 +1,8 @@
+const url = "http://localhost:3001/";
+
+
+///     FUNÇÕES DO CADASTRO DE CAMPEONATO     ///
+
 // Função de validação do formulário
 function validateForm(formData) {
     const name = formData.get('nomeCampeonato');
@@ -35,7 +40,6 @@ function obterIdUsuarioLocalStorage() {
 
 // Evento quando o botão "Salvar" de criação é clicado
 document.querySelector('#saveCampeonatoForm').addEventListener('click', function () {
-
     // Obter os dados do formulário de criação
     const formData = new FormData(document.querySelector('#createCampeonatoForm'));
     // Adicionar o idUsuario ao formData aqui
@@ -56,7 +60,7 @@ document.querySelector('#saveCampeonatoForm').addEventListener('click', function
     };
     // Fazer uma solicitação POST para criar um novo banner
     axios.post(`${url}campeonato/create`, formData, config)
-        .then(response => {            
+        .then(response => {
             Swal.fire({
                 icon: 'success',
                 title: 'Campeonato criado com sucesso',
@@ -87,45 +91,10 @@ document.querySelector('#saveCampeonatoForm').addEventListener('click', function
     }
 });
 
-document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
-    const dropZoneElement = inputElement.closest(".drop-zone");
-  
-    dropZoneElement.addEventListener("click", (e) => {
-      inputElement.click();
-    });
-  
-    inputElement.addEventListener("change", (e) => {
-      if (inputElement.files.length) {
-        updateThumbnail(dropZoneElement, inputElement.files[0]);
-      }
-    });
-  
-    dropZoneElement.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      dropZoneElement.classList.add("drop-zone--over");
-    });
-  
-    ["dragleave", "dragend"].forEach((type) => {
-      dropZoneElement.addEventListener(type, (e) => {
-        dropZoneElement.classList.remove("drop-zone--over");
-      });
-    });
-  
-    dropZoneElement.addEventListener("drop", (e) => {
-      e.preventDefault();
-  
-      if (e.dataTransfer.files.length) {
-        inputElement.files = e.dataTransfer.files;
-        updateThumbnail(dropZoneElement, e.dataTransfer.files[0]);
-      }
-  
-      dropZoneElement.classList.remove("drop-zone--over");
-    });
-  });
 
   function updateThumbnail(dropZoneElement, file) {
     let thumbnailElement = dropZoneElement.querySelector(".drop-zone__thumb");
-    
+
     const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
     const imageExtension = file.name.split('.').pop().toLowerCase();
     if (!allowedExtensions.includes(`.${imageExtension}`)) {
@@ -141,20 +110,20 @@ document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
     if (dropZoneElement.querySelector(".drop-zone__prompt")) {
       dropZoneElement.querySelector(".drop-zone__prompt").remove();
     }
-  
+
     // First time - there is no thumbnail element, so lets create it
     if (!thumbnailElement) {
       thumbnailElement = document.createElement("div");
       thumbnailElement.classList.add("drop-zone__thumb");
       dropZoneElement.appendChild(thumbnailElement);
     }
-  
+
     thumbnailElement.dataset.label = file.name;
-  
+
     // Show thumbnail for image files
     if (file.type.startsWith("image/")) {
       const reader = new FileReader();
-  
+
       reader.readAsDataURL(file);
       reader.onload = () => {
         thumbnailElement.style.backgroundImage = `url('${reader.result}')`;
@@ -163,4 +132,3 @@ document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
       thumbnailElement.style.backgroundImage = null;
     }
   }
-  

@@ -2,7 +2,7 @@ const api = require('../config/api')
 
 exports.getPartidaCampeonatoById = async (req,res) =>{
     try {
-        const idPartida = req.params.idPartida
+        const vidPartida = req.params.partida
         // Configurar o cabeçalho com a autorização do token
         const token = await req.session.token
         const config = {
@@ -10,7 +10,7 @@ exports.getPartidaCampeonatoById = async (req,res) =>{
         }
 
         // Fazer a requisição para a API
-        let response = await api.get(`/partida/${idPartida}`, config)
+        let response = await api.get(`/partida/get/${vidPartida}`, config)
         const partida = response.data
 
         response = await api.get(`/time/players/${partida.idTime1}`, config)

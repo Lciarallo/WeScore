@@ -1,6 +1,7 @@
 const api = require('../config/api')
-const apiUrl = "http://localhost:3001/"
-const spaUrl = "http://localhost:3002/"
+
+
+
 // Metodo para buscar todos os elementos da api
 exports.getALLDatas = async (req,res) => {
     try {
@@ -25,11 +26,13 @@ exports.getALLDatas = async (req,res) => {
                 }
             })
             cont = 0;
-            response = await api.get(`/partida/get/${idcamp}`, config)
+            
+            response = await api.get(`/partida/${idcamp}`, config)
             partidas = response.data
 
-            response = await api.get(`/time_campeonato/${idcamp}`, config)
+            response = await api.get(`/partida/IDs/${idcamp}`, config)
             idtimes = response.data.idtime
+            console.log(idtimes.length);
             if (idtimes.length != 0) {
                 response = await api.get(`/time/${idtimes}`, config)
                 times = response.data
@@ -41,16 +44,29 @@ exports.getALLDatas = async (req,res) => {
                         element.active = false
                     }
                 })
+                console.log(times);
                 response = await api.get(`/time/players/${idtimes[0]}`, config)
                 jogadores = response.data
             }
         }
         const user = res.locals.user
         
-        res.render('dashboard', { user, campeonatos, partidas, times, jogadores, spaUrl, apiUrl, layout : 'painelws' })
+        res.render('dashboard', { user,campeonatos, partidas, times, jogadores, layout : 'painelws' })
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Erro ao buscar datas.' });
         console.log("PainelWS Token: "+req.session.token)
     }
+}
+
+exports.pageSettings = async (req,res) => {
+    res.render('settings/settings', {layout : 'painelws'})
+
+}
+exports.pageSettingsProfile = async (req,res)=> {
+    res.render('settings/profile', {layout: 'painelws'})
+}
+
+exports.pageSettingsBanner = async (req,res)=> {
+    res.render('settings/banners', {layout: 'painelws'})
 }

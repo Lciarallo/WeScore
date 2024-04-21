@@ -33,11 +33,11 @@
 			</div>
 			<nav class="nav-bar">
 				<ul>
-					<li><a href="/painelws/campeonato">Campeonato</a></li>
-					<li><a href="/painelws/partida">Partida</a></li>
-					<li><a href="/painelws/time">Time</a></li>
-					<li><a href="/painelws/jogador">Jogador</a></li>
-					<li><a href="/painelws/usuario">Usuario</a></li>
+					<li><a href="/painelws/campeonato">Campeonatos</a></li>
+					<li><a href="/painelws/partidas">Partidas</a></li>
+					<li><a href="/painelws/times">Times</a></li>
+					<li><a href="/painelws/jogadores">Jogadores</a></li>
+					<li><a href="/painelws/usuarios">Usuarios</a></li>
 					<div class="user_image">
 						<img id="user_img"
 							src="http://localhost:3001/public/upload/img/usuario/{{user.userLogo}}"
@@ -53,6 +53,11 @@
 								<i class="ri-logout-box-r-line"></i>
 								Sair
 							</button>
+                            <a href="/painelws/settings"><button class="user_input_value" id="settingsButton">
+                                <i class="lni lni-cog"></i>
+                                Ajustes
+                            </button>
+                            </a>
 						</div>
 					</div>
 				</ul>
@@ -85,10 +90,6 @@
 			</div>
 			</div>
 		</section>
-		<script>
-			const url = "{{apiUrl}}"
-			const urlSPA = "{{spaUrl}}"
-		</script>
 		<!-- Sweetalert para interação com o usuário-->
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.31/dist/sweetalert2.all.min.js"></script>
 		<script src="/js/menu.js"></script>

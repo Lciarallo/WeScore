@@ -9,6 +9,7 @@ function token() {
             'Authorization': `Bearer ${token}`
         }
     }
+    const url = "http://localhost:3001/";
     // Fazer uma solicitação POST para criar o usuario
     axios.get(`${url}usuario/checkUser/`, config)
         .then(response => {

@@ -28,7 +28,6 @@
 	align-items: center;
   justify-content: center;
 	flex-direction: column;
-  overflow: hidden;
 }
 .mural .logotime01 img, .mural .logotime02 img {
   display: flex;

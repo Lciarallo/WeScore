@@ -1,15 +1,15 @@
 <main class="flex_main">
 	<section class="sectionCamp">
 		<div class="cardDashboard">
-			<p class="cardDashboard_title">Campeonato <a href="/painelws/campeonato/add"><i class="ri-add-fill"></i>{{!-- <i class="ri-add-circle-line"></i> --}}</a></p>
+			<p class="cardDashboard_title">Campeonatos <a href="/painelws/campeonato/add"><i class="ri-add-fill"></i>{{!-- <i class="ri-add-circle-line"></i> --}}</a></p>
 			<div class="container__">
 				<div id="campeonatosContainer" class="cardDashboard_container">
 					{{#if campeonatos.length}}
 						{{#each campeonatos}}
 							{{#if active}}
-								<div class="cardDashboard_division campeonato_active" aria-current="true"  data-campeonato-id="{{idCampeonato}}">
+								<div class="cardDashboard_division cardCampeonato campeonato_active" aria-current="true"  data-campeonato-id="{{idCampeonato}}">
 							{{else}}
-								<div class="cardDashboard_division" data-campeonato-id="{{idCampeonato}}">
+								<div class="cardDashboard_division cardCampeonato" data-campeonato-id="{{idCampeonato}}">
 							{{/if}}
 								<div class="cardDashboard_division_image">
 									<img 
@@ -44,7 +44,7 @@
 											<div class="painelws_Btn_text">Opções</div>
 										</button>
 										<div class="dropdown-content">
-											<a id="edit{{idCampeonato}}" href="/painelws/campeonato/{{idCampeonato}}/edit"><i class="ri-pencil-line"></i>Editar</a>
+											<a id="edit{{idCampeonato}}" href="/painelws/campeonatos/{{idCampeonato}}"><i class="ri-pencil-line"></i>Editar</a>
 											
 											{{#if (eq status "Aguardando")}}
 												<!-- Botão Iniciar se o status for "Aguardando" -->
@@ -64,14 +64,14 @@
 						<p>Nenhum campeonato disponível.</p>
 					{{/if}}
 				</div>
-				</div>
+			</div>
 			<a class="cardDashboard_more" href="/painelws/campeonato">Ver mais</a>
 		</div>
 		<div class="cardDashboard">
 			{{#if partidas.length}}
-				<p class="cardDashboard_title">Partida <a id="buttonPartidaAdd" href="/painelws/campeonato/{{campeonatos.[0].idCampeonato}}/partida/add" data-campeonato-id="{{campeonatos.[0].idCampeonato}}"><i class="ri-add-fill"></i></a></p>
+				<p class="cardDashboard_title">Partidas <a id="buttonPartidaAdd" href="/painelws/campeonato/{{campeonatos.[0].idCampeonato}}/partida/add" data-partida-id="{{partidas.[0].idPartida}}"><i class="ri-add-fill"></i></a></p>
 			{{else}}
-				<p class="cardDashboard_title">Partida <a id="buttonPartidaAdd" href="/painelws/campeonato/0/partida/add" data-campeonato-id="0"><i class="ri-add-fill"></i></a></p>
+				<p class="cardDashboard_title">Partidas <a id="buttonPartidaAdd" href="/painelws/campeonato/0/partida/add" data-partida-id="0"><i class="ri-add-fill"></i></a></p>
 			{{/if}}
 			<div class="container__">
 				<div id="partidasContainer" class="cardDashboard_container">
@@ -93,7 +93,7 @@
 											<div class="painelws_Btn_text">Opções</div>
 										</button>
 										<div class="dropdown-content">
-											<a id="editPartida{{idPartida}}" href="/painelws/campeonato/{{idCampeonato}}/partida/{{idPartida}}/edit"><i class="ri-pencil-line"></i>Editar</a>
+											<a id="editPartida{{idPartida}}" href="/painelws/campeonatos/{{idPartida}}"><i class="ri-pencil-line"></i>Editar</a>
 											
 											{{#if (eq status "Aguardando")}}
 												<!-- Botão Iniciar se o status for "Aguardando" -->
@@ -115,13 +115,14 @@
 				</div>
 			</div>
 		</div>
+        </div>
 	</section>
 	<section2 class="sectionCamp2">
 		<div class="cardDashboard2">
 			{{#if campeonatos.length}}
-				<p class="cardDashboard_title">Time <a id="buttonTimeAdd" href="/painelws/campeonato/{{campeonatos.[0].idCampeonato}}/time/add" data-campeonato-id="{{campeonatos.[0].idCampeonato}}"><i class="ri-add-fill"></i></a></p>
+				<p class="cardDashboard_title">Times <a id="buttonTimeAdd" href="/painelws/campeonato/{{campeonatos.[0].idCampeonato}}/time/add" data-campeonato-id="{{campeonatos.[0].idCampeonato}}"><i class="ri-add-fill"></i></a></p>
 			{{else}}
-				<p class="cardDashboard_title">Time <a id="buttonTimeAdd" href="/painelws/campeonato/0/time/add" data-campeonato-id="0"><i class="ri-add-fill"></i></a></p>
+				<p class="cardDashboard_title">Times <a id="buttonTimeAdd" href="/painelws/campeonato/0/time/add" data-campeonato-id="0"><i class="ri-add-fill"></i></a></p>
 			{{/if}}
 			<div class="container__">
 				<div id="timesContainer" class="cardDashboard_container">
@@ -150,7 +151,7 @@
 											<div class="painelws_Btn_text">Opções</div>
 										</button>
 										<div class="dropdown-content">
-											<a id="editTime{{idTime}}" href="/painelws/time/{{idTime}}/edit"><i class="ri-pencil-line"></i>Editar</a>
+											<a id="editTime{{idTime}}" href="/painelws/times/{{idTime}}"><i class="ri-pencil-line"></i>Editar</a>
 											<a id="delTime{{idTime}}" ><i class="ri-delete-bin-line"></i>Remover</a>
 										</div>
 									</div>
@@ -164,13 +165,14 @@
 			</div>
 			<a class="cardDashboard_more" href="#">Ver mais</a>
 		</div>
-	</section2>
+        </div>
+    </section2>
 	<section2 class="sectionCamp2">
 		<div class="cardDashboard2">
 			{{#if campeonatos.length}}
-				<p class="cardDashboard_title">Jogador <a id="buttonJogadorAdd" href="/painelws/time/{{times.[0].idTime}}/time/add" data-time-id="{{times.[0].idTime}}"><i class="ri-add-fill"></i></a></p>
+				<p class="cardDashboard_title">Jogadores <a id="buttonJogadorAdd" href="/painelws/time/{{times.[0].idTime}}/time/add" data-time-id="{{times.[0].idTime}}"><i class="ri-add-fill"></i></a></p>
 			{{else}}
-				<p class="cardDashboard_title">Jogador <a id="buttonJogadorAdd" href="/painelws/time/0/jogador/add" data-time-id="0"><i class="ri-add-fill"></i></a></p>
+				<p class="cardDashboard_title">Jogadores <a id="buttonJogadorAdd" href="/painelws/time/0/jogador/add" data-time-id="0"><i class="ri-add-fill"></i></a></p>
 			{{/if}}
 			<div class="container__">
 				<div id="jogadoresContainer" class="cardDashboard_container">

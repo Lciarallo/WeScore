@@ -1,3 +1,7 @@
+
+const url = "http://localhost:3001/"
+const urlSPA = "http://localhost:3002/"
+
 const registerButton = document.getElementById("register");
 const loginButton = document.getElementById("login");
 const container = document.getElementById("logincontainer");
@@ -49,6 +53,8 @@ function showErrorAlert(message) {
   divErro.textContent = '! ' + message;
 }
 
+
+
 // Função chamada quando o botão "Salvar" do formulário de login é clicado
 function loginClick(event) {
   event.preventDefault(); // Evita o envio padrão do formulário
@@ -69,7 +75,7 @@ function loginClick(event) {
     };
 
     // Faz uma solicitação POST para fazer o login do usuário
-    axios.post(`${url}login/`, serializedData, config)
+    axios.post(`${urlSPA}login/`, serializedData, config)
       .then(response => {
         //console.log(response.data);
         // Armazena o token e dados de usuario de resposta no localStorage

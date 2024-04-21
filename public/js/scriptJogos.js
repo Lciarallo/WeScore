@@ -44,6 +44,7 @@ const AlterStatusCard = (time) => {
 };
 closecard.addEventListener("click", () => {
   AlterStatusCard();
+  //document.getElementById("popupcard").style.display = "none";
 });
 //Jogadores para substituição do time 01
 subsTime01jgd6.addEventListener("click", () => {

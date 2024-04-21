@@ -10,9 +10,7 @@ routerLogin.get('/logout', function (req, res) {
     //apaga a sessão
     req.session.destroy()
     //redireciona para a página de login
-    const apiUrl = "http://localhost:3001/"
-    const spaUrl = "http://localhost:3002/"
-    res.redirect('/login', { apiUrl, spaUrl })
+    res.redirect('/login')
 });
 
 module.exports = routerLogin
